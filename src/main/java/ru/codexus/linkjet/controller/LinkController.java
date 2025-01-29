@@ -29,13 +29,13 @@ public class LinkController {
         this.linkRepository = linkRepository;
     }
 
-    @GetMapping(path = "")
+    @GetMapping(path = "/home")
     public String home() {
-        return "index";
+        return "home";
     }
 
     @ResponseBody
-    @GetMapping(path = "{id}")
+    @GetMapping(path = "/{id}")
     public ResponseEntity<?> getUrl(@PathVariable(name = "id", required = false) String linkId) {
         if (StringUtils.isEmpty(linkId)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -60,7 +60,7 @@ public class LinkController {
     }
 
     @ResponseBody
-    @PostMapping(path = "")
+    @PostMapping(path = "/")
     public String shortenUrl(
         @RequestParam(name = "url") String url,
         @RequestParam(name = "expires-in", required = false) LocalDateTime expiresIn
