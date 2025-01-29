@@ -3,6 +3,8 @@ package ru.codexus.linkjet.dto;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 public class Link {
@@ -15,6 +17,10 @@ public class Link {
         this.id = id;
         this.url = url;
         this.expiresIn = expiresIn;
+    }
+
+    public static Link mapRow(ResultSet rs, int rowNum) throws SQLException {
+        return new Link(rs.getString("id"), rs.getString("url"), null);
     }
 
     @NonNull

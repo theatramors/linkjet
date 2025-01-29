@@ -21,11 +21,10 @@ public class LinkRepository {
     }
 
     public Optional<Link> findById(String id) {
-        MapSqlParameterSource params = new MapSqlParameterSource().addValue("id", id);
+        MapSqlParameterSource params = new MapSqlParameterSource()
+            .addValue("id", id);
 
-        Link link = jdbcTemplate.queryForObject("SELECT * FROM link WHERE id=:id", params, (rs, rowNum) -> new Link(
-            rs.getString("id"), rs.getString("url"), null
-        ));
+        Link link = jdbcTemplate.queryForObject(SELECT_SQL, params, Link::mapRow);
 
         return Optional.ofNullable(link);
     }
@@ -36,6 +35,6 @@ public class LinkRepository {
             .addValue("url", url)
             .addValue("expires_in", expiresIn);
 
-        return jdbcTemplate.update("INSERT INTO link (id, url, expired_in) VALUES (:id, :url, :expires_in)", params);
+        return jdbcTemplate.update(INSERT_SQL, params);
     }
 }
