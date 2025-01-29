@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import ru.codexus.linkjet.configuration.properties.AppProperties;
 import ru.codexus.linkjet.dto.Link;
 import ru.codexus.linkjet.persistence.LinkRepository;
 import ru.codexus.linkjet.utils.RandomStringGenerator;
@@ -20,9 +21,11 @@ import java.util.Optional;
 @Controller
 public class LinkController {
 
+    private final AppProperties appProperties;
     private final LinkRepository linkRepository;
 
-    public LinkController(LinkRepository linkRepository) {
+    public LinkController(AppProperties appProperties, LinkRepository linkRepository) {
+        this.appProperties = appProperties;
         this.linkRepository = linkRepository;
     }
 
@@ -62,7 +65,7 @@ public class LinkController {
         @RequestParam(name = "url") String url,
         @RequestParam(name = "expires-in", required = false) LocalDateTime expiresIn
     ) {
-        String linkId = RandomStringGenerator.generate(12);
+        String linkId = RandomStringGenerator.generate(appProperties.getLink().getLength());
 
         int updated = linkRepository.createLink(linkId, url, expiresIn);
 
