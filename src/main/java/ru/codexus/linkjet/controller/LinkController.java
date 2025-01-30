@@ -30,7 +30,7 @@ public class LinkController {
         this.linkRepository = linkRepository;
     }
 
-    @GetMapping(path = "/home")
+    @GetMapping(path = "/")
     public String home() {
         return "home";
     }
