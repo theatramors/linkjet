@@ -1,5 +1,6 @@
 package ru.codexus.linkjet.persistence;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -24,9 +25,11 @@ public class LinkRepository {
         MapSqlParameterSource params = new MapSqlParameterSource()
             .addValue("id", id);
 
-        Link link = jdbcTemplate.queryForObject(SELECT_SQL, params, Link::mapRow);
-
-        return Optional.ofNullable(link);
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_SQL, params, Link::mapRow));
+        } catch (EmptyResultDataAccessException exception) {
+            return Optional.empty();
+        }
     }
 
     public int createLink(String id, String url, LocalDateTime expiresIn) {
