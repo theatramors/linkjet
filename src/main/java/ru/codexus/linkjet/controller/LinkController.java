@@ -1,6 +1,7 @@
 package ru.codexus.linkjet.controller;
 
 import liquibase.repackaged.org.apache.commons.lang3.StringUtils;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,8 +63,12 @@ public class LinkController {
     @ResponseBody
     @PostMapping(path = "/")
     public String shortenUrl(
-        @RequestParam(name = "url") String url,
-        @RequestParam(name = "expires-in", required = false) LocalDateTime expiresIn
+        @RequestParam(name = "url")
+        String url,
+
+        @RequestParam(name = "expires_in", required = false)
+        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+        LocalDateTime expiresIn
     ) {
         String linkId = RandomStringGenerator.generate(appProperties.getLink().getLength());
 
