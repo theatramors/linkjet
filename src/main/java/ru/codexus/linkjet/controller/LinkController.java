@@ -1,6 +1,7 @@
 package ru.codexus.linkjet.controller;
 
 import liquibase.repackaged.org.apache.commons.lang3.StringUtils;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,8 @@ import java.util.Optional;
 
 @Controller
 public class LinkController {
+
+    private static final Integer MAX_ATTEMPTS = 5;
 
     private final AppProperties appProperties;
     private final LinkRepository linkRepository;
@@ -70,12 +73,19 @@ public class LinkController {
         @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
         LocalDateTime expiresIn
     ) {
-        String linkId = RandomStringGenerator.generate(appProperties.getLink().getLength());
+        for (int i = 0; i < MAX_ATTEMPTS; i++) {
+            String linkId = RandomStringGenerator.generate(appProperties.getLink().getLength());
 
-        int updated = linkRepository.createLink(linkId, url, expiresIn);
+            try {
+                if (linkRepository.createLink(linkId, url, expiresIn) > 0) {
+                    return linkId;
+                }
+            } catch (DuplicateKeyException exception) {
+                System.out.println("Generated already existing short link");
+            }
+        }
 
-        System.out.println("Updated: " + updated);
-
-        return linkId;
+        // FIXME: Add error handling
+        throw new RuntimeException("Max attempts reached");
     }
 }
