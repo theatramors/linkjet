@@ -53,9 +53,9 @@ public class LinkController {
 
         Link link = linkOptional.get();
 
-        // if (linkOptional.getExpiresIn().isAfter(LocalDateTime.now())) {
-        //     throw new IllegalStateException();
-        // }
+        if (LocalDateTime.now().isAfter(link.getExpiresIn())) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(HttpHeaders.LOCATION, link.getUrl());
