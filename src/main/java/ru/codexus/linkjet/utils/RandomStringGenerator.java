@@ -7,10 +7,6 @@ public final class RandomStringGenerator {
     private RandomStringGenerator() {
     }
 
-    public static String generate() {
-        return generate(12);
-    }
-
     @SuppressWarnings("SpellCheckingInspection")
     public static String generate(int length) {
         String ALPHABET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
