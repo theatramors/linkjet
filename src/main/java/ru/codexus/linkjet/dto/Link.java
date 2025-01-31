@@ -20,7 +20,11 @@ public class Link {
     }
 
     public static Link mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new Link(rs.getString("id"), rs.getString("url"), null);
+        var id = rs.getString("id");
+        var url = rs.getString("url");
+        var expiredIn = rs.getTimestamp("expired_in");
+
+        return new Link(id, url, expiredIn != null ? expiredIn.toLocalDateTime() : null);
     }
 
     @NonNull
